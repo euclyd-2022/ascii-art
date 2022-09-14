@@ -54,9 +54,9 @@ def home():
 
             outputImage = Image.new("RGB", (width, height), color=(200,200,200))
             d = ImageDraw.Draw(outputImage)
-            font = ImageFont.truetype("./cour.ttf", 18)
-            for y in range(0, height, 18):
-               for x in range(0, width, 18):
+            font = ImageFont.truetype("./cour.ttf", 12)
+            for y in range(0, height, 12):
+               for x in range(0, width, 12):
                     xy =(x,y)
                     r, g, b = px[xy]
                     value = int(r/3 + g/3 + b/3)
@@ -71,6 +71,7 @@ def home():
             remove(f"{UPLOAD_FOLDER}{filename}")
             print(f"{UPLOAD_FOLDER}{filename} removed")
 
+    path = f"{UPLOAD_FOLDER}output_colour.jpg"
 
     if request.method == 'POST':
         file = request.files['file']
@@ -83,7 +84,15 @@ def home():
         else:
             flash("error with upload")
 
-    path = f"{UPLOAD_FOLDER}output_colour.jpg"
+    elif request.method == 'GET':
+
+        delete_img = request.args.get('delete')
+        if delete_img:
+
+            remove(path)
+            return redirect(url_for('home'))
+
+
     # if exists(path) and get_file_or_folder_age(path) < time.time()+1000:
     #     remove(path)
 
