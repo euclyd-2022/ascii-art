@@ -7,11 +7,12 @@ from os.path import exists
 from os import remove, stat
 
 UPLOAD_FOLDER = './static/uploads/'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = "notasecret"
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 
 def allowed_file(filename):
     #returns bool
@@ -36,7 +37,7 @@ def home():
     #     # returning the time
     #     return ctime
 
-    def make_image(file):
+    def make_image(file, charsize=12, charspacing=12):
         global file_exists
         charList = list(chars)
         charLen = len(charList)
@@ -54,9 +55,9 @@ def home():
 
             outputImage = Image.new("RGB", (width, height), color=(200,200,200))
             d = ImageDraw.Draw(outputImage)
-            font = ImageFont.truetype("./cour.ttf", 12)
-            for y in range(0, height, 12):
-               for x in range(0, width, 12):
+            font = ImageFont.truetype("./cour.ttf", charsize)
+            for y in range(0, height, charspacing):
+               for x in range(0, width, charspacing):
                     xy =(x,y)
                     r, g, b = px[xy]
                     value = int(r/3 + g/3 + b/3)
@@ -78,8 +79,12 @@ def home():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(f"{UPLOAD_FOLDER}{filename}")
+            size = int(request.form.get('size'))
+            print(size)
+            spacing = int(request.form.get('spacing'))
+            print(spacing)
             # run ascii function
-            make_image(f"{UPLOAD_FOLDER}{filename}")
+            make_image(f"{UPLOAD_FOLDER}{filename}",size,spacing)
             return redirect(url_for('home'))
         else:
             flash("error with upload")
