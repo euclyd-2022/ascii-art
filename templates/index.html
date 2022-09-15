@@ -10,12 +10,14 @@
 <script src="https://kit.fontawesome.com/2818b092f8.js" crossorigin="anonymous"></script>
     <style>
     @import url("{{ url_for('static', filename='css/style.css')}}");
-      body{  background:  grey {% if file_exists %}
-    url( "{{url_for('static', filename='uploads/output_colour.jpg')}}"
+      body{  background:  rgb(200,200,200) {% if file_exists %}
+    url( "{{url_for('static', filename='uploads/output_colour.jpg')}}") no-repeat center fixed;
+    background-size: contain;
     {% else %}
-    url( "{{url_for('static', filename='assets/bird.jpg')}}"
-    {% endif %})  no-repeat center fixed;
+    url( "{{url_for('static', filename='assets/bird.jpg')}}")
+    no-repeat center fixed;
     background-size: cover;
+    {% endif %})
     }
 
     </style>
